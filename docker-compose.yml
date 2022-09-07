@@ -12,28 +12,28 @@ services:
     command: sh -c "${CONTAINER_APP_CMD}"
     ports:
       - "3001:3000"
+    networks:
+      - bg-service
   db:
     image: mariadb:latest
     ports:
       - "3306:3306"
     volumes:
-      - db:/var/lib/mysql
-    expose:
-      - "3306"
+      - maria-data:/data/db
     env_file: .env
-    restart: always
     environment:
-      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes
-      - MARIADB_DATABASE=${DB_DATABASE}
-      - MARIADB_PORT=3306
-      - MARIADB_USER=${DB_USER}
-      - MARIADB_PASSWORD=${DB_PASSWORD}
-    container_name: db
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    container_name: database
+    networks:
+      - bg-service
+
+networks:
+  bg-service:
+    driver: bridge
 
 volumes:
-  db:
-
-# networks:
-#   default:
-#     name: ms-name
-#     external: true
+  maria-data:
+    driver: local

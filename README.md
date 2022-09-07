@@ -9,6 +9,10 @@ copy `.env.example` file to `.env`
 > Note: Edit values as needed
 
 ##### Start containers
+You need run the dependencies into app container
+```sh
+docker-compose run --rm app npm i
+```
 Generate the containers if they not exist and leave the services started.
 ```sh
 docker-compose up -d
