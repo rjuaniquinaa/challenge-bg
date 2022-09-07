@@ -1,0 +1,39 @@
+version: '3.9'
+services:
+  app:
+    build: ./
+    depends_on:
+      - db
+    volumes:
+      - ./:/usr/src/app
+     # - /usr/src/app/node_modules
+     # - node_modules:/usr/src/app/node_modules
+    env_file: .env
+    command: sh -c "${CONTAINER_APP_CMD}"
+    ports:
+      - "3001:3000"
+  db:
+    image: mariadb:latest
+    ports:
+      - "3306:3306"
+    volumes:
+      - db:/var/lib/mysql
+    expose:
+      - "3306"
+    env_file: .env
+    restart: always
+    environment:
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes
+      - MARIADB_DATABASE=${DB_DATABASE}
+      - MARIADB_PORT=3306
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+    container_name: db
+
+volumes:
+  db:
+
+# networks:
+#   default:
+#     name: ms-name
+#     external: true
